@@ -1,5 +1,13 @@
 function handle=prettyBarPlot(vals,names,thexlabelstring,numberPerCondition)
 
+	% handle=prettyBarPlot(vals,names,thexlabelstring,numberPerCondition)
+	%
+	% Inputs-
+	%	vals               = vector containing the correlation values you want to plot
+	%	names              = cell array of strings containing names for each case
+	%	thexlabelstring    = string for the x-axis label
+	%	numberPerCondition = the number of cases that you used to compute each correlation (for computing the confidence interval)
+
 if nargin<4
 	numberPerCondition=112;
 end
