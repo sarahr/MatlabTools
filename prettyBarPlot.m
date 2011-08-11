@@ -1,12 +1,12 @@
 function handle=prettyBarPlot(vals,names,axislabel,confInt,handleToBarPlotFunc)
 
-	% handle=prettyBarPlot(vals,names,axislabel,numberPerCondition)
+	% handle=prettyBarPlot(vals,names,axislabel,confInt,handleToBarPlotFunc)
 	%
 	% Inputs-
 	%	vals				= vector containing the correlation values you want to plot
 	%	names				= cell array of strings containing names for each case
 	%	axislabel			= string for the axis label
-	%	confInt				= ; specify as zero or false to skip
+	%	confInt				= 2 column matrix containing lower and upper bounds; specify as false to skip
 	%		CORRELATION ANALYSIS
 	%			confwidths=intervalEstimationOfCorrCoeff(vals,numberPerCondition); % 95% confidence by default
 	%			lower=vals(:)-confwidths(:,1);
@@ -23,7 +23,7 @@ if nargin<5
 	handleToBarPlotFunc=@barh;
 end
 if nargin<4
-	numberPerCondition=112;
+	confInt=false;
 end
 if nargin<3
 	axislabel='|r_p|';
@@ -59,7 +59,7 @@ xlabel(['$' axislabel '$'],...
 	'FontSize',30);
 
 % Add confidence intervals
-if numberPerCondition>0
+if not(islogical(confInt))
 	errorHandle=errorbar_x(vals(:).',1:length(vals),...
 		confInt(:,1),confInt(:,2),'k-');
 	set(errorHandle,...
