@@ -1,18 +1,32 @@
-function handle=prettyBarPlot(vals,names,thexlabelstring,numberPerCondition)
+function handle=prettyBarPlot(vals,names,axislabel,confInt,handleToBarPlotFunc)
 
-	% handle=prettyBarPlot(vals,names,thexlabelstring,numberPerCondition)
+	% handle=prettyBarPlot(vals,names,axislabel,numberPerCondition)
 	%
 	% Inputs-
-	%	vals               = vector containing the correlation values you want to plot
-	%	names              = cell array of strings containing names for each case
-	%	thexlabelstring    = string for the x-axis label
-	%	numberPerCondition = the number of cases that you used to compute each correlation (for computing the confidence interval); specify as zero or false to skip
+	%	vals				= vector containing the correlation values you want to plot
+	%	names				= cell array of strings containing names for each case
+	%	axislabel			= string for the axis label
+	%	confInt				= ; specify as zero or false to skip
+	%		CORRELATION ANALYSIS
+	%			confwidths=intervalEstimationOfCorrCoeff(vals,numberPerCondition); % 95% confidence by default
+	%			lower=vals(:)-confwidths(:,1);
+	%			upper=confwidths(:,2)-vals(:);
+	%			confInt=[lower(:) upper(:)];
+	%		STMI BONFERRONI
+	%			use the halfwidths from multcompare (see abbie_multcompare and/or statTesting)
+	%	handleToBarPlotFunc	= handle to the plotting function (defaults to @barh)
+	%						 call bar to plot vertical bars
+	%						 call barh to plot horizontal bars
 
+
+if nargin<5
+	handleToBarPlotFunc=@barh;
+end
 if nargin<4
 	numberPerCondition=112;
 end
 if nargin<3
-	thexlabelstring='|r_p|';
+	axislabel='|r_p|';
 end
 
 accentColor=0.5;
@@ -22,7 +36,7 @@ fontSize=20;
 figure('color','white');
 hold on;
 
-handle=barh(vals,0.7,'FaceColor',mainBarColor*[1 1 1],'Edgecolor',accentColor*[1 1 1]);
+handle=handleToBarPlotFunc(vals,0.7,'FaceColor',mainBarColor*[1 1 1],'Edgecolor',accentColor*[1 1 1]);
 
 set(gca,...
 	'TickDir','out',...
@@ -40,15 +54,14 @@ set(gca,...
 	'Box','off');
 set(handle,'ShowBaseLine','off',...
 	'LineWidth',1.2);
-xlabel(['$' thexlabelstring '$'],...
+xlabel(['$' axislabel '$'],...
 	'interpreter','latex',...
 	'FontSize',30);
 
 % Add confidence intervals
 if numberPerCondition>0
-	confInt=intervalEstimationOfCorrCoeff(vals,numberPerCondition); % 95% confidence by default
 	errorHandle=errorbar_x(vals(:).',1:length(vals),...
-		vals(:).'-confInt(:,1).',confInt(:,2).'-vals(:).','k-');
+		confInt(:,1),confInt(:,2),'k-');
 	set(errorHandle,...
 		'LineWidth',1.75,...
 		'Color',accentColor*[1 1 1]);
