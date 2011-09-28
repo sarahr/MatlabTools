@@ -1,4 +1,4 @@
-function X = spectrogramCCRMA(x,nfft,fs,window,noverlap,doplot,dbdown)
+function [X,t,f,Xdb,clipvals] = spectrogramCCRMA(x,nfft,fs,window,noverlap,doplot,dbdown)
 
 %MYSPECTROGRAM Calculate spectrogram from signal.
 % B = MYSPECTROGRAM(A,NFFT,Fs,WINDOW,NOVERLAP) calculates the 
