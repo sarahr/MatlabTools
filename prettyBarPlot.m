@@ -70,7 +70,7 @@ end
 % Add text labels of the values
 for ii=1:length(vals)
 	if exist('confInt','var')
-		xPosForText=confInt(ii,2);
+		xPosForText=confInt(ii,2)+vals(ii);
 	else
 		xPosForText=vals(ii);
 	end
