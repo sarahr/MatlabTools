@@ -1,19 +1,29 @@
-function handle=prettyBarPlot(vals,names,axislabel,confIntWidths,direction)
+function handle=prettyBarPlot(vals,names,axislabel,confInt,direction,fontType)
 
-	% handle=prettyBarPlot(vals,names,axislabel,confIntWidths,handleToBarPlotFunc)
+	% handle=prettyBarPlot(vals,names,axislabel,confInt,direction,fontType)
 	%
 	% Inputs-
 	%	vals				= vector containing the correlation values you want to plot
 	%	names				= cell array of strings containing names for each case
 	%	axislabel			= string for the axis label
-	%	confIntWidths		= 2 column matrix containing widths of lower and upper bounds from the mean; specify as false to skip
+	%	confInt				= 2 column matrix containing widths of lower and upper bounds from the mean; specify as false to skip
 	%		CORRELATION ANALYSIS
 	%			confwidths=intervalEstimationOfCorrCoeff(vals,numberPerCondition); % 95% confidence by default
+	%			lower=vals(:)-confwidths(:,1);
+	%			upper=confwidths(:,2)-vals(:);
+	%			confInt=[lower(:) upper(:)];
 	%		STMI BONFERRONI
 	%			use the halfwidths from multcompare (see abbie_multcompare and/or statTesting)
 	%	direction			= plot the bars horizontally ('h') or vertically ('v')
+	%	fontType = defaults to 'Times' (use something like 'Helvetica Neue' for powerpoints 
+	%
+	%
+	%	NOTE: for HASQI + Loizou Objective measures plotting of r and stde, 
+	%		axisPos = [0.20462962962963,0.222222222222222,0.723148148148148,0.702777777777778];
 
-
+if nargin<6
+	fontType='Times';
+end
 if nargin<5
 	direction='h';
 end
@@ -31,7 +41,7 @@ else
 	handleToLabelFunction=@xlabel;
 end
 if nargin<4
-	confIntWidths=false;
+	confInt=false;
 end
 if nargin<3
 	axislabel='|r_p|';
@@ -56,7 +66,7 @@ set(gca,...
 	[whichAxisContainsGroupNames 'TickLabelMode'],'manual',...
 	[whichAxisContainsGroupNames 'TickLabel'],names,...
 	'FontSize',fontSize,...
-	'FontName','Helvetica Neue',...
+	'FontName',fontType,...
 	'FontWeight','normal',...
 	'GridLineStyle','-',...
 	'Box','off');
@@ -67,7 +77,7 @@ handleToLabelFunction(['$' axislabel '$'],...
 	'FontSize',30);
 
 % Add confidence intervals
-if not(islogical(confIntWidths))
+if not(islogical(confInt))
 	if strcmp(direction,'v')
 		xandy=[(1:length(vals)).' vals(:)];
 	else
@@ -75,7 +85,7 @@ if not(islogical(confIntWidths))
 	end
 	
 	errorHandle=handleToErrorBarFunc(xandy(:,1),xandy(:,2),...
-		confIntWidths(:,1),confIntWidths(:,2),'k-'); % NOTE this 'k-' is causing problems with the vertical case
+		confInt(:,1),confInt(:,2),'k-'); % NOTE this 'k-' is causing problems with the vertical case
 	set(errorHandle,...
 		'LineWidth',1.75,...
 		'Color',accentColor*[1 1 1]);
@@ -83,8 +93,8 @@ end
 
 % Add text labels of the values
 for ii=1:length(vals)
-	if exist('confIntWidths','var')
-		whereToPutValue=vals(ii)+confIntWidths(ii,2);
+	if not(islogical(confInt))
+		whereToPutValue=vals(ii)+confInt(ii,2);
 	else
 		whereToPutValue=vals(ii);
 	end
@@ -96,6 +106,6 @@ for ii=1:length(vals)
 	text(xandy(1),xandy(2),...
 		sprintf('%1.2f',vals(ii)),...
 		'FontSize',fontSize,...
-		'FontName','Helvetica Neue',...
+		'FontName',fontType,...
 		'FontWeight','bold');
 end
