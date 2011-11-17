@@ -1,4 +1,4 @@
-function fighandle=plotspectrogram(x,y,z,YTicks,YTickLabelsCell)
+function fighandle=plotsurfinterp(x,y,z,YTicks,YTickLabelsCell)
 
 	% FUNCTION fighandle=plotspectrogram(x,y,z,fighandle) TODO
 	%
@@ -22,4 +22,6 @@ set(gca,'Box','on');
 xlim([min(x) max(x)]);
 ylim([min(y) max(y)]);
 
-set(gca,'YTick',YTicks,'YTickLabel',YTickLabelsCell);
+if nargin>3
+	set(gca,'YTick',YTicks,'YTickLabel',YTickLabelsCell);
+end
