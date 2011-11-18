@@ -122,10 +122,10 @@ for m=1:nframes
   xoff = xoff + nhop; % advance input offset by hop size
 end
 
+t = (0:nframes-1)*nhop/fs;
+f = 0.001*(0:nfft-1)*fs/nfft;
+Xdb = 20*log10(abs(X));
 if (nargout==0) | doplot
-  t = (0:nframes-1)*nhop/fs;
-  f = 0.001*(0:nfft-1)*fs/nfft;
-  Xdb = 20*log10(abs(X));
   Xmax = max(max(Xdb));
   % Clip lower limit to -dbdown dB so nulls don't dominate:
   clipvals = [Xmax-dbdown,Xmax];
