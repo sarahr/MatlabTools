@@ -9,18 +9,16 @@ function fighandle=plotsurfinterp(x,y,z,YTicks,YTickLabelsCell)
 % fill in input checks TODO
 
 
-surf(x,y,z);
+fighandle=surf(x,y,z);
 view(0,90);
 graycolormap=colormap(gray);
 colormap(flipud(graycolormap));
-shading(gca,'interp');
+shading(gca,'flat');
 
 set(gca,'YScale','log');
 grid('off');
 set(gca,'Box','on');
-
-xlim([min(x) max(x)]);
-ylim([min(y) max(y)]);
+axis('tight');
 
 if nargin>3
 	set(gca,'YTick',YTicks,'YTickLabel',YTickLabelsCell);
