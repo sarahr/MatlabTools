@@ -1,7 +1,8 @@
 function fighandle=plotsurf(x,y,z,YTicks,YTickLabelsCell)
 
-	% FUNCTION fighandle=plotspectrogram(x,y,z,fighandle) TODO
+	% FUNCTION fighandle=plotsurf(x,y,z,YTicks,YTickLabelsCell) TODO
 	%
+	%	note: YTicks and YTickLabelsCell are optional
 
 % if nargin<4
 	% fighandle=figure;
