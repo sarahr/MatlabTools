@@ -1,4 +1,4 @@
-function fighandle=plotsurfinterp(x,y,z,YTicks,YTickLabelsCell)
+function fighandle=plotsurf(x,y,z,YTicks,YTickLabelsCell)
 
 	% FUNCTION fighandle=plotspectrogram(x,y,z,fighandle) TODO
 	%
