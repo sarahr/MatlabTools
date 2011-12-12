@@ -3,7 +3,7 @@
 %% Don't forget to specify the following before calling this script {{{
 %{
 pathToSave
-exception
+errorInfo
 %}
 %% }}}
 [~,computeridentifier] = system('hostname');
@@ -11,7 +11,7 @@ computeridentifier=computeridentifier(...
 	not((computeridentifier==char(10))|(computeridentifier==char(13))));
 send_mail('abbiekressner+matlab@gmail.com',...
     ['MATLAB error on ' computeridentifier],...
-	getReport(exception,'extended'));
+	getReport(errorInfo,'extended'));
 fprintf(['\n--> Caught error in try-catch on ' datestr(now) '.\n']); 
 whos
 fprintf('================================================\n');
@@ -29,4 +29,4 @@ if ischar(pathToSave)
 	end
 end
 
-rethrow(exception);
+rethrow(errorInfo);
