@@ -1,4 +1,11 @@
-function y=normalizeZeroToOne(x)
+function [y,themin,themax]=normalizeZeroToOne(x,themin,themax)
 
-y=x-min(x(:));
-y=y./max(y(:));
+if nargin<2
+	themin=min(x(:));
+end
+y=x-themin;
+
+if nargin<3
+	themax=max(y(:));
+end
+y=y/themax;
