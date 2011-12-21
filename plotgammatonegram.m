@@ -1,4 +1,4 @@
-function plotgammatonegram(x,fs)
+function gammatonegram_x=plotgammatonegram(x,fs)
 
 
 	fMin=125;
@@ -11,5 +11,5 @@ function plotgammatonegram(x,fs)
 	gammatonegram_x=gammatonegram(x,fs,windowTime,hopTime,nFilters,fMin,fMax);
 
 	cf=flipud(ERBSpace(fMin,fMax,nFilters));
-	plotTimeFreq(20*log10(gammatonegram_x),cf); 
+	plotTimeFreq(20*log10(gammatonegram_x).',cf); 
 	caxis([-90 -30]);
