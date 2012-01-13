@@ -1,12 +1,15 @@
-function chiSq=olkinfinntest(X,n)
-
+function [pval,chiSq,dof]=olkinfinntest(X)
+	
+	% FUNCTION chiSq=olkinfinntest(X)
+	%
 	% X is n-by-k (reference variable in first column)
+	%
+	% See I. OLKIN and J. FINN, “Testing Correlated Correlations,” Psychological Bulletin, vol. 108, no. 2, pp. 330–333, 1990.
 	
 	[n,k]=size(X);
 	r=corr(X);
 
-	% u=r(1,2:end);
-	u=r(1,3:end)-r(1,2); % upsilon
+	u=r(1,3:end)-r(1,2);
 	sigma_inf=zeros(k-2);
 	for jj=3:k
 		for ll=3:k
@@ -18,6 +21,8 @@ function chiSq=olkinfinntest(X,n)
 		end
 	end
 	chiSq=(u/sigma_inf)*u';
+	dof=k-2;
+	pval=1-chi2cdf(chiSq,dof);
 
 end % end of main function 
 
@@ -43,5 +48,5 @@ function out=var_inf_uj(r,n) % r is 3-by-3 (1,2,j)
 end
 function out=cov_inf_uj_ul(r,n) % r is 4-by-4 (1,2,j,l)
 	out=var_inf_uj(r(1:3,1:3),n)+var_inf_uj(r([1 2 4],[1 2 4]),n)+2*cov_inf_rij_rik(r([1 3 4],[1 3 4]),n)...
-		-2*cov(r([1 2 4],[1 2 4]),n)-2*cov_inf_rij_rik(r(1:3,1:3),n)+2*var_inf_rij(r(1,2));
+		-2*cov_inf_rij_rik(r([1 2 4],[1 2 4]),n)-2*cov_inf_rij_rik(r(1:3,1:3),n)+2*var_inf_rij(r(1,2),n);
 end
