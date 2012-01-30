@@ -1,17 +1,17 @@
-function handle=prettyBarPlot(vals,names,axislabel,confInt,direction,fontType)
+function handle=prettyBarPlot(vals,names,axislabel,confWidths,direction,fontType,sigfigs)
 
-	% handle=prettyBarPlot(vals,names,axislabel,confInt,direction,fontType)
+	% handle=prettyBarPlot(vals,names,axislabel,confWidths,direction,fontType)
 	%
 	% Inputs-
 	%	vals				= vector containing the correlation values you want to plot
 	%	names				= cell array of strings containing names for each case
 	%	axislabel			= string for the axis label
-	%	confInt				= 2 column matrix containing widths of lower and upper bounds from the mean; specify as false to skip
+	%	confWidths			= 2 column matrix containing widths of lower and upper bounds from the mean; specify as false to skip
 	%		CORRELATION ANALYSIS
 	%			confwidths=intervalEstimationOfCorrCoeff(vals,numberPerCondition); % 95% confidence by default
 	%			lower=vals(:)-confwidths(:,1);
 	%			upper=confwidths(:,2)-vals(:);
-	%			confInt=[lower(:) upper(:)];
+	%			confWidths=[lower(:) upper(:)];
 	%		STMI BONFERRONI
 	%			use the halfwidths from multcompare (see abbie_multcompare and/or statTesting)
 	%	direction			= plot the bars horizontally ('h') or vertically ('v')
@@ -21,12 +21,22 @@ function handle=prettyBarPlot(vals,names,axislabel,confInt,direction,fontType)
 	%	NOTE: for HASQI + Loizou Objective measures plotting of r and stde, 
 	%		axisPos = [0.20462962962963,0.222222222222222,0.723148148148148,0.702777777777778];
 
-if nargin<6
-	fontType='Times';
-end
-if nargin<5
-	direction='h';
-end
+%% Fill in missing inputs {{{
+if nargin<7, sigfigs=[]; end;
+if nargin<6, fontType=[]; end;
+if nargin<5, direction=[]; end;
+if nargin<4, confWidths=[]; end;
+if nargin<3, axislabel=[]; end;
+% }}}
+
+%% Set defaults {{{
+if isempty(sigfigs), sigfigs=2; end;
+if isempty(fontType), fontType='Times'; end;
+if isempty(direction), direction='h'; end;
+if isempty(confWidths), confWidths=false; end;
+if isempty(axislabel), axislabel='|r_p|'; end;
+% }}}
+
 if strcmp(direction,'v')
 	handleToBarPlotFunc=@bar;
 	handleToErrorBarFunc=@errorbar;
@@ -40,13 +50,6 @@ else
 	whichAxisContainsTheValues='X';
 	handleToLabelFunction=@xlabel;
 end
-if nargin<4
-	confInt=false;
-end
-if nargin<3
-	axislabel='|r_p|';
-end
-
 accentColor=0.5;
 mainBarColor=0.2;
 fontSize=20;
@@ -77,7 +80,7 @@ handleToLabelFunction(['$' axislabel '$'],...
 	'FontSize',30);
 
 % Add confidence intervals
-if not(islogical(confInt))
+if not(islogical(confWidths))
 	if strcmp(direction,'v')
 		xandy=[(1:length(vals)).' vals(:)];
 	else
@@ -85,7 +88,7 @@ if not(islogical(confInt))
 	end
 	
 	errorHandle=handleToErrorBarFunc(xandy(:,1),xandy(:,2),...
-		confInt(:,1),confInt(:,2),'k-'); % NOTE this 'k-' is causing problems with the vertical case
+		confWidths(:,1),confWidths(:,2),'k-'); % NOTE this 'k-' is causing problems with the vertical case
 	set(errorHandle,...
 		'LineWidth',1.75,...
 		'Color',accentColor*[1 1 1]);
@@ -93,8 +96,8 @@ end
 
 % Add text labels of the values
 for ii=1:length(vals)
-	if not(islogical(confInt))
-		whereToPutValue=vals(ii)+confInt(ii,2);
+	if not(islogical(confWidths))
+		whereToPutValue=vals(ii)+confWidths(ii,2);
 	else
 		whereToPutValue=vals(ii);
 	end
@@ -104,7 +107,7 @@ for ii=1:length(vals)
 		xandy=[whereToPutValue+0.02*diff(get(gca,'XLim')),ii];
 	end
 	text(xandy(1),xandy(2),...
-		sprintf('%1.2f',vals(ii)),...
+		sprintf(['%1.' num2str(sigfigs) 'f'],vals(ii)),...
 		'FontSize',fontSize,...
 		'FontName',fontType,...
 		'FontWeight','bold');
