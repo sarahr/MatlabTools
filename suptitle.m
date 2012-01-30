@@ -94,7 +94,7 @@ end
 ha=axes('pos',[0 1 1 1],'visible','off','Tag','suptitle');
 ht=text(.5,titleypos-1,str);set(ht,'horizontalalignment','center','fontsize',fs);
 set(gcf,'nextplot',np);
-axes(haold);
+% axes(haold);
 if nargout,
 	hout=ht;
 end
