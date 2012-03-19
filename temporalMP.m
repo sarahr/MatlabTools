@@ -93,7 +93,7 @@ function [ws,r] = temporalMP(y,B,nonnegative,maxiter,mindelta,deadzone)
     maxr2 = .9999;
     
     feedbackFrequency = 250;
-    r2CheckFrequency  = 250;
+    r2CheckFrequency  = 1;
     
     %Scale the basis to have sum(B.^2)
     scales = 1./sqrt(sum(B.^2));
@@ -109,7 +109,7 @@ function [ws,r] = temporalMP(y,B,nonnegative,maxiter,mindelta,deadzone)
     else
         C = conv2(B(:,end:-1:1),y);
     end
-    C = C(:,(size(B,2)+1)/2 + (0:length(y)-1));
+    C = C(:,(size(B,2)+1)/2 + (0:length(y)-1)); % NOTE assumes length of kernels is odd
     
     %Precompute the convolution of each basis function with the other basis
     %functions
