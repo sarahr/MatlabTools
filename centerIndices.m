@@ -1,4 +1,4 @@
-function [first,last] = centerIndices(x,varargin)
+function ind = centerIndices(x,varargin)
 
 %MODIFIED FROM MATLAB'S WKEEP FUNCTION
 %
@@ -37,10 +37,12 @@ if nbDIM<=1
     sx = length(x);
     [first,last,ok] = GetFirstLast(sx,nbDIM,varargin{:});
     if ok , y = y(first(1):last(1)); end
+	if ok , ind = first(1):last(1); end
 else
     sx = size(x);  
     [first,last,ok] = GetFirstLast(sx,nbDIM,varargin{:});
     if ok , y = y(first(1):last(1),first(2):last(2)); end
+	if ok , ind{1} = first(1):last(1); ind{2} = first(2):last(2); end
 end
 
 
