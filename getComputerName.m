@@ -21,4 +21,4 @@ if ret ~= 0,
    end
 end
 name = lower(name);
-
+name = name(1:end-1);
