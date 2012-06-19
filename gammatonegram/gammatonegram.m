@@ -1,5 +1,5 @@
-function Y = gammatonegram(X,SR,TWIN,THOP,N,FMIN,FMAX,USEFFT,WIDTH)
-% Y = gammatonegram(X,SR,TWIN,THOP,N,FMIN,FMAX,USEFFT,WIDTH)
+function Y = gammatonegram(X,SR,USEFFT,TWIN,THOP,N,FMIN,FMAX,WIDTH)
+% Y = gammatonegram(X,SR,USEFFT,TWIN,THOP,N,FMIN,FMAX,WIDTH)
 %    Calculate a spectrogram-like time frequency magnitude array
 %    based on Gammatone subband filters.  Waveform X (at sample
 %    rate SR) is passed through an N (default 64) channel gammatone 
@@ -9,7 +9,8 @@ function Y = gammatonegram(X,SR,TWIN,THOP,N,FMIN,FMAX,USEFFT,WIDTH)
 %    (0.025), advancing by THOP secs (0.010) for successive
 %    columns.  These magnitudes are returned as an N-row
 %    nonnegative real matrix, Y.
-%    If USEFFT is present and zero, revert to actual filtering and
+%    If USEFFT is one, use Dan Ellis's fast implementation. If it
+%    is zero (default), use Malcolm Slaney's actual filtering and
 %    summing energy within windows.
 %    WIDTH (default 1.0) is how to scale bandwidth of filters 
 %    relative to ERB default (for fast method only).
@@ -18,12 +19,12 @@ function Y = gammatonegram(X,SR,TWIN,THOP,N,FMIN,FMAX,USEFFT,WIDTH)
 % Last updated: $Date: 2009/02/23 21:07:09 $
 
 if nargin < 2;  SR = 16000; end
-if nargin < 3;  TWIN = 0.025; end
-if nargin < 4;  THOP = 0.010; end
-if nargin < 5;  N = 64; end
-if nargin < 6;  FMIN = 50; end
-if nargin < 7;  FMAX = SR/2; end
-if nargin < 8;  USEFFT = 1; end
+if nargin < 3;  USEFFT = 0; end
+if nargin < 4;  TWIN = 0.025; end
+if nargin < 5;  THOP = 0.010; end
+if nargin < 6;  N = 64; end
+if nargin < 7;  FMIN = 50; end
+if nargin < 8;  FMAX = SR/2; end
 if nargin < 9;  WIDTH = 1.0; end
 
 
@@ -76,4 +77,9 @@ else
 end
 
 
-
+if nargout<1
+	imagesc(20*log10(Y)); 
+	axis xy;
+	caxis([-90 -30]);
+	colorbar;
+end	
