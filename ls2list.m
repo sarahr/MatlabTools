@@ -13,7 +13,7 @@ commas=findstr(fl,',');
 if ~isempty(strfind(fl,'No such file or directory'))
 	filelist = {};
 elseif isempty(commas)
-	filelist = fl;
+	filelist = {removeCarriageReturns(fl)};
 else
 	filelist = cell(1,length(commas)+1);
 	filelist{length(commas)+1} = removeCarriageReturns(fl(commas(end)+2:end));
